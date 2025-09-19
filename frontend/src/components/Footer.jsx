@@ -10,26 +10,12 @@ export default function Footer() {
         {/* Right Side - Links */}
         <div className="flex gap-4 mt-2 sm:mt-0">
           <a
-            href="https://github.com/"
+            href="https://api.frankfurter.app/currencies/"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-indigo-400 transition"
           >
-            GitHub
-          </a>
-          <a
-            href="https://twitter.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-indigo-400 transition"
-          >
-            Twitter
-          </a>
-          <a
-            href="mailto:support@nebulaconvert.com"
-            className="hover:text-indigo-400 transition"
-          >
-            Contact
+            https://api.frankfurter.app/currencies
           </a>
         </div>
       </div>

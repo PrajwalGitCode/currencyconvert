@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { fetchCurrencies, convertCurrency } from "../api"; // ✅ centralized API
 
 export default function CurrencyConverter() {
   const [currencies, setCurrencies] = useState([]);
@@ -9,18 +10,17 @@ export default function CurrencyConverter() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Fetch available currencies from backend
   useEffect(() => {
-    const fetchCurrencies = async () => {
+    const loadCurrencies = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/currency/currencies");
-        const data = await res.json();
-        setCurrencies(Object.keys(data)); // keys like ["USD","EUR","INR"]
+        const data = await fetchCurrencies();
+        setCurrencies(Object.keys(data)); // ["USD","EUR","INR",...]
       } catch (err) {
         console.error("Error fetching currencies:", err);
+        setError("Failed to load currencies.");
       }
     };
-    fetchCurrencies();
+    loadCurrencies();
   }, []);
 
   const handleConvert = async (e) => {
@@ -30,22 +30,8 @@ export default function CurrencyConverter() {
     setResult(null);
 
     try {
-      const token = localStorage.getItem("token"); // user JWT stored at login
-      const res = await fetch("http://localhost:5000/api/currency/convert", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // protect middleware requires this
-        },
-        body: JSON.stringify({ from, to, amount }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Conversion failed");
-      }
-
+      const token = localStorage.getItem("token");
+      const data = await convertCurrency({ from, to, amount, token });
       setResult(data.result);
     } catch (err) {
       setError(err.message);
