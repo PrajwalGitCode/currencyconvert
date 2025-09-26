@@ -3,27 +3,22 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-
 import authRoutes from "./routes/auth.js";
 import currencyRoutes from "./routes/currencyRoutes.js";
 
 dotenv.config();
 const app = express();
-
 const PORT = process.env.PORT || 5000;
 
-// ✅ Middlewares
 app.use(cors({
-  origin: "http://localhost:5173", // allow frontend
-  credentials: true,
+  origin: ["https://unique-tiramisu-currencyconverter.netlify.app"],
+  credentials: true
 }));
 app.use(express.json());
 
-// ✅ Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/currency", currencyRoutes);
 
-// ✅ MongoDB connection + server start
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,

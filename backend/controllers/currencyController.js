@@ -16,16 +16,12 @@ export const getCurrencies = async (req, res) => {
 export const convertCurrency = async (req, res) => {
     try {
         const { from, to, amount } = req.body;
-        // frankfurter expects ?from=XXX&to=YYY&amount=NN
         const response = await axios.get('https://api.frankfurter.app/latest', {
             params: { from, to, amount }
         });
-
-        // response.data.rates is an object like { "EUR": 0.85 }
         const rateForTo = response.data.rates?.[to];
         const result = typeof rateForTo === 'number' ? rateForTo : null;
 
-        // Save conversion to DB if user is authenticated (req.userId set by middleware)
         if (req.userId) {
             try {
                 const conversion = new Conversion({
